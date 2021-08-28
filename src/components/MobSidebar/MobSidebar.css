@@ -1,0 +1,8 @@
+.MobSidebar {
+    position: absolute;
+    width: 15rem;
+    right: 0;
+    top: 0;
+    background-color: gray;
+    height: 100%;
+}

@@ -1,0 +1,38 @@
+.HeaderBar {
+    background-color: lightgray;
+}
+
+.MenuCategory {
+    display: inline-block;
+    position: relative;
+    height: 100%;
+    padding: 0.25rem 1rem 0.25rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    z-index: 100;
+    border-right: solid gray 1px;
+}
+
+.MenuCategory:hover {
+    background-color: white;
+}
+
+.MenuCategory > ul {
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    width: 15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background-color: lightgray;
+}
+
+.MenuCategory > ul > li {
+    padding: 1rem;
+    margin: 0;
+}
+
+.MenuCategory > ul > li:hover {
+    background-color: white;
+}

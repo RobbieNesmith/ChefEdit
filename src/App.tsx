@@ -1,23 +1,18 @@
-import logo from './logo.svg';
 import './App.css';
+import HeaderBar from './components/HeaderBar/HeaderBar';
+import BlockPalette from './components/BlockPalette/BlockPalette';
+import LevelEditor from './components/LevelEditor/LevelEditor';
+import MobSidebar from './components/MobSidebar/MobSidebar';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <HeaderBar />
+      <div className="ContentContainer">
+        <BlockPalette />
+        <LevelEditor />
+        <MobSidebar />
+      </div>
     </div>
   );
 }

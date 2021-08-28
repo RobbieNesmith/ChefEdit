@@ -1,0 +1,14 @@
+.LevelEditor {
+    background-color: #333333;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+}
+
+.TileGrid {
+    background-color: black;
+    width: 640px;
+    height: 480px;
+    margin: 0 auto;
+}

@@ -1,0 +1,53 @@
+.BlockPalette {
+    position: absolute;
+    width: 15rem;
+    height: 100%;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.BlockPalette > li {
+    padding: 1rem;
+    display: flex;
+    cursor: pointer;
+    user-select: none;
+    background-color: gray;
+    height: 5rem;
+}
+
+.LeftClick {
+    border: solid green .25rem;
+    padding: 0.75rem !important;
+}
+
+.RightClick {
+    border: solid red .25rem;
+    padding: 0.75rem !important;
+}
+
+.LeftRightClick {
+    border-left: solid green .25rem;
+    border-top: solid green .25rem;
+    border-right: solid red .25rem;
+    border-bottom: solid red .25rem;
+    padding: 0.75rem !important;
+}
+
+.BlockPalette > li:nth-child(even) {
+    background-color:#666666;
+}
+
+.BlockImage {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    margin-right: 1rem;
+    background-image: url("../../img/ss.png");
+}
+
+.BlockDescription {
+    flex-shrink: 1;
+}
