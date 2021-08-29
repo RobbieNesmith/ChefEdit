@@ -6,9 +6,26 @@
     height: 100%;
 }
 
-.TileGrid {
+.TileGridHolder {
     background-color: black;
     width: 640px;
     height: 480px;
     margin: 0 auto;
+}
+
+.TileGrid {
+    width: 640px;
+    height: 480px;
+    background-color: rgba(0,0,0,0.1);
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Tile {
+    flex-shrink: 0;
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: url(../../img/ss.png)
 }
