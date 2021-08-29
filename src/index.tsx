@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { SelectedTilesProvider } from './hooks/useSelectedTiles';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <SelectedTilesProvider>
+      <App />
+    </SelectedTilesProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

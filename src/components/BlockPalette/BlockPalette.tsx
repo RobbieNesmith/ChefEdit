@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { tileInfo } from "../../data/tileInfo";
+import useSelectedTiles from "../../hooks/useSelectedTiles";
 import "./BlockPalette.css";
 
 interface BlockInfo {
@@ -24,9 +25,9 @@ function getBlockWithIndex(index: number) {
 
 export default function BlockPalette() {
     const [blocks, setBlocks] = useState([] as Array<BlockInfo>);
-    const [leftClickBlock, setLeftClickBlock] = useState(0);
-    const [rightClickBlock, setRightClickBlock] = useState(0);
     const [open, setOpen] = useState(true);
+
+    const {leftClickTileId, rightClickTileId, setLeftClickTileId, setRightClickTileId} = useSelectedTiles();
 
     useEffect(() => {
         setBlocks(getBlocks());
@@ -34,9 +35,9 @@ export default function BlockPalette() {
 
     function handleBlockSelection(evt: React.MouseEvent, id: number) {
         if (evt.button === 0) {
-            setLeftClickBlock(id);
+            setLeftClickTileId(id);
         } else if (evt.button === 2) {
-            setRightClickBlock(id);
+            setRightClickTileId(id);
         }
         evt.preventDefault();
         evt.stopPropagation();
@@ -50,12 +51,12 @@ export default function BlockPalette() {
             <ul>
                 {blocks.map(b => {
                     let selectionClass = "";
-                    if (leftClickBlock === b.id) {
+                    if (leftClickTileId === b.id) {
                         selectionClass = "LeftClick";
-                        if (rightClickBlock === b.id) {
+                        if (rightClickTileId === b.id) {
                             selectionClass = "LeftRightClick"
                         }
-                    } else if (rightClickBlock === b.id) {
+                    } else if (rightClickTileId === b.id) {
                         selectionClass = "RightClick";
                     }
                     return(
