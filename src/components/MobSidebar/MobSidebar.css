@@ -1,8 +1,22 @@
 .MobSidebar {
     position: absolute;
     width: 15rem;
-    right: 0;
     top: 0;
     background-color: gray;
     height: 100%;
+    transition: right 0.1s;
+}
+
+.CollapseMobSidebar {
+    position: absolute;
+    top: 1rem;
+    left: -2rem;
+    width: 2rem;
+    height: 2rem;
+    color: white;
+    background-color: grey;
+    border-radius: 0.5rem 0 0 0.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+    user-select: none;
 }
