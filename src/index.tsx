@@ -4,12 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SelectedTilesProvider } from './hooks/useSelectedTiles';
+import { EditorStateProvider } from './hooks/useEditorState';
 
 ReactDOM.render(
   <React.StrictMode>
-    <SelectedTilesProvider>
-      <App />
-    </SelectedTilesProvider>
+    <EditorStateProvider>
+      <SelectedTilesProvider>
+        <App />
+      </SelectedTilesProvider>
+    </EditorStateProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
