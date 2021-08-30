@@ -1,8 +1,10 @@
 import MenuCategory from "./MenuCategory";
 import "./HeaderBar.css";
 import MenuOption from "./MenuOption";
+import useEditorState from "../../hooks/useEditorState";
 
 export default function HeaderBar() {
+    const { toggleForegroundVisible } = useEditorState();
     return <div className="HeaderBar">
         <MenuCategory name="file">
             <MenuOption name="New" callback={() => console.log("new file")} />
@@ -15,7 +17,7 @@ export default function HeaderBar() {
             <MenuOption name="Paste" callback={() => console.log("paste")} />
             </MenuCategory>
         <MenuCategory name="view">
-            <MenuOption name="Switch Layer" callback={() => console.log("switch")} />
+            <MenuOption name="Switch Layer" callback={toggleForegroundVisible} />
         </MenuCategory>
     </div>;
 }

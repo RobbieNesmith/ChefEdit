@@ -3,16 +3,20 @@ import { createContext, useContext, useMemo, useState } from "react";
 export interface EditorState {
     leftClickPressed: boolean;
     rightClickPressed: boolean;
+    foregroundVisible: boolean;
     setLeftClickPressed(pressed: boolean): void;
     setRightClickPressed(pressed: boolean): void;
+    toggleForegroundVisible(): void;
 }
 
 function getEmptyEditorState(): EditorState {
     return {
         leftClickPressed: false,
         rightClickPressed: false,
+        foregroundVisible: true,
         setLeftClickPressed: (b: boolean) => { throw new Error("Editor State Context not found") },
-        setRightClickPressed: (b: boolean) => { throw new Error("Editor State Context not found") }
+        setRightClickPressed: (b: boolean) => { throw new Error("Editor State Context not found") },
+        toggleForegroundVisible: () => { throw new Error("Editor State Context not found") },
     }
 }
 
@@ -25,13 +29,16 @@ export default function useEditorState() {
 export function EditorStateProvider(props: {children: any}) {
     const [leftClickPressed, setLeftClickPressed] = useState(false);
     const [rightClickPressed, setRightClickPressed] = useState(false);
+    const [foregroundVisible, setForegroundVisible] = useState(true);
 
     const value = useMemo(() => ({
         leftClickPressed,
         rightClickPressed,
+        foregroundVisible,
         setLeftClickPressed,
-        setRightClickPressed
-    }), [leftClickPressed, rightClickPressed]);
+        setRightClickPressed,
+        toggleForegroundVisible: () => setForegroundVisible(fv => !fv),
+    }), [leftClickPressed, rightClickPressed, foregroundVisible]);
 
     return (
         <EditorStateContext.Provider value={value}>
