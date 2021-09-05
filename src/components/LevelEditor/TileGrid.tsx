@@ -46,10 +46,6 @@ export default function TileGrid(props: {
     return (
         <div
             className="TileGrid"
-            onContextMenu={evt => {
-                evt.preventDefault();
-                evt.stopPropagation();
-            }}
         >
             {props.tiles.map((tileId, index) => {
                 const offset = getOffsetForTileId(tileId);
