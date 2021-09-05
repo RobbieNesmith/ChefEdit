@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { tileInfo } from "../../data/tileInfo";
-import useSelectedTiles from "../../hooks/useSelectedTiles";
+import useEditorState from "../../hooks/useEditorState";
 import "./BlockPalette.css";
 
 interface BlockInfo {
@@ -27,7 +27,7 @@ export default function BlockPalette() {
     const [blocks, setBlocks] = useState([] as Array<BlockInfo>);
     const [open, setOpen] = useState(true);
 
-    const {leftClickTileId, rightClickTileId, setLeftClickTileId, setRightClickTileId} = useSelectedTiles();
+    const {leftClickTileId, rightClickTileId, setLeftClickTileId, setRightClickTileId} = useEditorState();
 
     useEffect(() => {
         setBlocks(getBlocks());

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import useEditorState from "../../hooks/useEditorState";
-import useSelectedTiles from "../../hooks/useSelectedTiles";
 import "./LevelEditor.css";
 import TileGrid from "./TileGrid";
 
@@ -9,10 +8,9 @@ function getBlankTileGrid(): Array<number> {
 }
 
 export default function LevelEditor() {
-    const {foregroundVisible, toggleForegroundVisible} = useEditorState();
+    const {foregroundVisible, leftClickTileId, rightClickTileId, toggleForegroundVisible, setLeftClickTileId} = useEditorState();
     const [backgroundTiles, setBackgroundTiles] = useState(getBlankTileGrid());
     const [foregroundTiles, setForegroundTiles] = useState(getBlankTileGrid());
-    const {leftClickTileId, rightClickTileId, setLeftClickTileId} = useSelectedTiles();
 
     function placeBackgroundTileAtIndex(index: number, button: number) {
         const tileToAdd = button === 0 ? leftClickTileId : rightClickTileId;
