@@ -13,7 +13,7 @@ export default function TileGrid(props: {
     onTilePlaced(index: number, button: number):void,
     onTilePicked(tileId: number): void
 }) {
-    const {leftClickPressed, rightClickPressed, setLeftClickPressed, setRightClickPressed} = useEditorState();
+    const {leftClickPressed, rightClickPressed, leftClickTileId, rightClickTileId, setLeftClickPressed, setRightClickPressed} = useEditorState();
 
     function handleMouseDown(index: number, evt: React.MouseEvent) {
         evt.stopPropagation();
@@ -21,7 +21,7 @@ export default function TileGrid(props: {
         if (evt.button === 0) {
             setLeftClickPressed(true);
             setRightClickPressed(false);
-            props.onTilePlaced(index, 0);
+            props.onTilePlaced(index, leftClickTileId);
         } else if (evt.button === 1) {
             setLeftClickPressed(false);
             setRightClickPressed(false);
@@ -29,15 +29,15 @@ export default function TileGrid(props: {
         } else if (evt.button === 2) {
             setLeftClickPressed(false);
             setRightClickPressed(true);
-            props.onTilePlaced(index, 2);
+            props.onTilePlaced(index, rightClickTileId);
         }
     }
 
     function handleMouseMove(index: number, evt: React.MouseEvent) {
         if (leftClickPressed) {
-            props.onTilePlaced(index, 0);
+            props.onTilePlaced(index, leftClickTileId);
         } else if (rightClickPressed) {
-            props.onTilePlaced(index, 2);
+            props.onTilePlaced(index, rightClickTileId);
         }
         evt.stopPropagation();
         evt.preventDefault();

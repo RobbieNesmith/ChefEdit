@@ -57,17 +57,15 @@ export function EditorStateProvider(props: {children: any}) {
     const [backgroundTiles, setBackgroundTiles] = useState(getBlankTileGrid());
     const [foregroundTiles, setForegroundTiles] = useState(getBlankTileGrid());
 
-    function placeBackgroundTileAtIndex(index: number, button: number) {
-        const tileToAdd = button === 0 ? leftClickTileId : rightClickTileId;
+    function placeBackgroundTileAtIndex(index: number, tileId: number) {
         setBackgroundTiles((bt) => {
-            return [...bt.slice(0, index), tileToAdd, ...bt.slice(index + 1)];
+            return [...bt.slice(0, index), tileId, ...bt.slice(index + 1)];
         });
     }
 
-    function placeForegroundTileAtIndex(index: number, button: number) {
-        const tileToAdd = button === 0 ? leftClickTileId : rightClickTileId;
+    function placeForegroundTileAtIndex(index: number, tileId: number) {
         setForegroundTiles((ft) => {
-            return [...ft.slice(0, index), tileToAdd, ...ft.slice(index + 1)];
+            return [...ft.slice(0, index), tileId, ...ft.slice(index + 1)];
         });
     }
 
