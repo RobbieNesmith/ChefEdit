@@ -1,5 +1,8 @@
+import Mob from "../models/mob";
+
 const bgoffset = 88;
 const fgoffset = 756;
+const numMobsOffset = 1360;
 
 export async function readFile(inputFile: File): Promise<ArrayBuffer> {
   return new Promise((resolve) => {
@@ -10,7 +13,7 @@ export async function readFile(inputFile: File): Promise<ArrayBuffer> {
 }
 
 export function getBackgroundLayer(fileData: ArrayBuffer) {
-  const view = new Int16Array(fileData.slice(bgoffset, bgoffset + 20 * 15 * 2));
+  const view = new Uint16Array(fileData.slice(bgoffset, bgoffset + 20 * 15 * 2));
   let background = [];
   for (var i = 0; i < 20 * 15; i++) {
     background.push(view[i]);
@@ -19,13 +22,38 @@ export function getBackgroundLayer(fileData: ArrayBuffer) {
 }
 
 export function getForegroundLayer(fileData: ArrayBuffer) {
-  const view = new Int16Array(fileData.slice(fgoffset, fgoffset + 20 * 15 * 2));
+  const view = new Uint16Array(fileData.slice(fgoffset, fgoffset + 20 * 15 * 2));
   let foreground = [];
   for (var i = 0; i < 20 * 15; i++) {
     foreground.push(view[i]);
   }
   return foreground;
 }
+
+export function getMobs(fileData: ArrayBuffer): Array<Mob> {
+  const view = new Uint8Array(fileData.slice(numMobsOffset));
+  const numMobs = view[0];
+  let ptr = 1;
+  let mobDataStart = ptr;
+  let delimiterCount = 0;
+  let mobs = [];
+  while (mobs.length < numMobs) {
+    while (delimiterCount < 8) {
+      if (view[ptr] === 255) {
+        delimiterCount++;
+      } else {
+        delimiterCount = 0;
+      }
+      ptr++;
+    }
+    console.log(`adding mob with data ranging from ${mobDataStart} to ${ptr}`);
+    mobs.push(new Uint8Array(fileData.slice(mobDataStart, ptr)));
+    mobDataStart = ptr;
+    delimiterCount = 0;
+  }
+  return mobs.map((d, i) => ({id: i, rawData: d}));
+}
+
 /*
 function loadFileToEditor() {
   levelData = tmpLevelData;
