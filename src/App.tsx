@@ -13,6 +13,11 @@ function App() {
         setLeftClickPressed(false);
         setRightClickPressed(false);
       } }
+
+      onContextMenu={ (evt) => {
+        evt.stopPropagation();
+        evt.preventDefault();
+      } }
     >
       <HeaderBar />
       <div className="ContentContainer">
