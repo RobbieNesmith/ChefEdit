@@ -3,6 +3,7 @@
     height: 100%;
     user-select: none;
     transition: left 0.1s;
+    z-index: 10;
 }
 
 .BlockPalette > ul {

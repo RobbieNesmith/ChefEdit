@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useEditorState from "../../hooks/useEditorState";
 import useSelectedTiles from "../../hooks/useSelectedTiles";
 import "./LevelEditor.css";
 import TileGrid from "./TileGrid";
@@ -8,9 +9,10 @@ function getBlankTileGrid(): Array<number> {
 }
 
 export default function LevelEditor() {
+    const {foregroundVisible, toggleForegroundVisible} = useEditorState();
     const [backgroundTiles, setBackgroundTiles] = useState(getBlankTileGrid());
     const [foregroundTiles, setForegroundTiles] = useState(getBlankTileGrid());
-    const {leftClickTileId, rightClickTileId, setLeftClickTileId, setRightClickTileId} = useSelectedTiles();
+    const {leftClickTileId, rightClickTileId, setLeftClickTileId} = useSelectedTiles();
 
     function placeBackgroundTileAtIndex(index: number, button: number) {
         const tileToAdd = button === 0 ? leftClickTileId : rightClickTileId;
@@ -38,11 +40,18 @@ export default function LevelEditor() {
                     onTilePicked={pickTile}
                     onTilePlaced={placeBackgroundTileAtIndex}
                 />
-                <TileGrid
+                {foregroundVisible ? <TileGrid
                     tiles={foregroundTiles}
                     onTilePicked={pickTile}
                     onTilePlaced={placeForegroundTileAtIndex}
-                />
+                /> : null }
+                <div
+                    className="LayerTab"
+                    onClick={toggleForegroundVisible}
+                    style={{backgroundColor: foregroundVisible ? "#6888e8" : "#e09038"}}
+                >
+                    Editing: {foregroundVisible ? "Foreground" : "Background"}
+                </div>
             </div>
         </div>
     );

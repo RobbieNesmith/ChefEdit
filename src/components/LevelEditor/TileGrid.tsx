@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import useEditorState from "../../hooks/useEditorState";
 
 function getOffsetForTileId(index: number) {
     return {
@@ -12,40 +13,32 @@ export default function TileGrid(props: {
     onTilePlaced(index: number, button: number):void,
     onTilePicked(tileId: number): void
 }) {
-    const [leftMouseDown, setLeftMouseDown] = useState(false);
-    const [rightMouseDown, setRightMouseDown] = useState(false);
+    const {leftClickPressed, rightClickPressed, setLeftClickPressed, setRightClickPressed} = useEditorState();
 
     function handleMouseDown(index: number, evt: React.MouseEvent) {
         evt.stopPropagation();
         evt.preventDefault();
         if (evt.button === 0) {
-            setLeftMouseDown(true);
-            setRightMouseDown(false);
+            setLeftClickPressed(true);
+            setRightClickPressed(false);
             props.onTilePlaced(index, 0);
         } else if (evt.button === 1) {
-            setLeftMouseDown(false);
-            setRightMouseDown(false);
+            setLeftClickPressed(false);
+            setRightClickPressed(false);
             props.onTilePicked(props.tiles[index]);
         } else if (evt.button === 2) {
-            setLeftMouseDown(false);
-            setRightMouseDown(true);
+            setLeftClickPressed(false);
+            setRightClickPressed(true);
             props.onTilePlaced(index, 2);
         }
     }
 
     function handleMouseMove(index: number, evt: React.MouseEvent) {
-        if (leftMouseDown) {
+        if (leftClickPressed) {
             props.onTilePlaced(index, 0);
-        } else if (rightMouseDown) {
+        } else if (rightClickPressed) {
             props.onTilePlaced(index, 2);
         }
-        evt.stopPropagation();
-        evt.preventDefault();
-    }
-
-    function handleMouseUp(evt: React.MouseEvent) {
-        setLeftMouseDown(false);
-        setRightMouseDown(false);
         evt.stopPropagation();
         evt.preventDefault();
     }
@@ -70,7 +63,6 @@ export default function TileGrid(props: {
                         }}
                         onMouseDown={(evt) => handleMouseDown(index, evt)}
                         onMouseMove={(evt) => handleMouseMove(index, evt)}
-                        onMouseUp={(evt) => handleMouseUp(evt)}
                     />
                 );
             })}
