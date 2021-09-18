@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useEditorState from "../../hooks/useEditorState";
+import MobInfo from "./MobInfo";
 import "./MobSidebar.css";
 
 export default function MobSidebar() {
@@ -10,15 +11,9 @@ export default function MobSidebar() {
             className="MobSidebar"
             style={{right: open ? 0 : "-15rem"}}
         >
-            <div>
-                {mobs.map(m => {
-                    return (
-                        <div>
-                            {m.rawData.join(",")}
-                        </div>
-                    );
-                })}
-            </div>
+            <ul>
+                {mobs.map(m => <MobInfo mob={m} />)}
+            </ul>
             <div
                 className="CollapseMobSidebar"
                 onClick={() => setOpen(o => !o)}

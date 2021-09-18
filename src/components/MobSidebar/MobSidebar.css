@@ -1,10 +1,28 @@
 .MobSidebar {
     position: absolute;
-    width: 15rem;
     top: 0;
     background-color: gray;
     height: 100%;
     transition: right 0.1s;
+}
+
+.MobSidebar > ul {
+    width: 15rem;
+    height: 100%;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.MobSidebar > ul > li {
+    padding: 1rem;
+    cursor: pointer;
+    background-color: gray;
+}
+
+.MobSidebar > ul > li:nth-child(even) {
+    background-color:#666666;
 }
 
 .CollapseMobSidebar {
