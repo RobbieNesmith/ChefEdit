@@ -30,6 +30,67 @@ export function getForegroundLayer(fileData: ArrayBuffer) {
   return foreground;
 }
 
+function parseMob(mobData: ArrayBuffer, id: number): Mob {
+  const rawData = new Uint8Array(mobData);
+  let ptr = 0;
+  let extraData = null;
+  let skip = 3;
+  if (id !== 0) {
+    skip = 4;
+  }
+
+  let extraDataLength = 0;
+  if (rawData[0] & 0x10) {
+    extraDataLength = 4;
+  }
+  if (rawData[0] & 0x01) {
+    extraDataLength += 4;
+  }
+  extraData = mobData.slice(skip, skip + extraDataLength);
+  ptr += skip + extraDataLength;
+
+  const startCoords = new Float32Array(mobData.slice(ptr, ptr + 8));
+  const startingCoordinates = {
+    x: startCoords[0],
+    y: startCoords[1]
+  }
+  ptr += 8;
+
+  const flippedH = !!new Int32Array(mobData.slice(ptr, ptr + 4));
+  ptr += 4;
+
+  let nameEndPtr = ptr;
+  while(rawData[nameEndPtr]) {
+    nameEndPtr++;
+  }
+  const name = new TextDecoder().decode(new Uint8Array(mobData.slice(ptr, nameEndPtr)));
+  ptr = nameEndPtr + 1;
+
+  const numPathCoordinates = rawData[ptr];
+  ptr += 4;
+
+  let pathCoordinates = [];
+
+  for (let i = 0; i < numPathCoordinates; i++) {
+    const pathCoords = new Float32Array(mobData.slice(ptr, ptr + 8));
+    pathCoordinates.push({
+      x: pathCoords[0],
+      y: pathCoords[1]
+    });
+    ptr += 8;
+  }
+
+  return {
+    id,
+    rawData,
+    extraData,
+    startingCoordinates,
+    flippedH,
+    name,
+    pathCoordinates
+  }
+}
+
 export function getMobs(fileData: ArrayBuffer): Array<Mob> {
   const view = new Uint8Array(fileData.slice(numMobsOffset));
   const numMobs = view[0];
@@ -38,20 +99,19 @@ export function getMobs(fileData: ArrayBuffer): Array<Mob> {
   let delimiterCount = 0;
   let mobs = [];
   while (mobs.length < numMobs) {
-    while (delimiterCount < 8) {
-      if (view[ptr] === 255) {
+    while (delimiterCount < 8 || view[ptr] === 0xFF) {
+      if (view[ptr] === 0xFF) {
         delimiterCount++;
       } else {
         delimiterCount = 0;
       }
       ptr++;
     }
-    console.log(`adding mob with data ranging from ${mobDataStart} to ${ptr}`);
-    mobs.push(new Uint8Array(fileData.slice(mobDataStart, ptr)));
+    mobs.push(fileData.slice(numMobsOffset + mobDataStart, numMobsOffset + ptr));
     mobDataStart = ptr;
     delimiterCount = 0;
   }
-  return mobs.map((d, i) => ({id: i, rawData: d}));
+  return mobs.map(parseMob);
 }
 
 /*
