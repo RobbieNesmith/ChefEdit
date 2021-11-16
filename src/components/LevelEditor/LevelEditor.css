@@ -38,3 +38,14 @@
     user-select: none;
     padding: 0 2rem 0 1rem;
 }
+
+.Mob {
+    position: absolute;
+    z-index: 1000;
+}
+
+.Mob img {
+    position: relative;
+    left: -50%;
+    top: 12px;
+}

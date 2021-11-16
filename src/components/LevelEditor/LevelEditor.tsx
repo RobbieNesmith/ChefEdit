@@ -10,7 +10,8 @@ export default function LevelEditor() {
         foregroundTiles,
         placeBackgroundTileAtIndex,
         placeForegroundTileAtIndex,
-        pickTile
+        pickTile,
+        mobs
     } = useEditorState();
 
     return(
@@ -33,6 +34,23 @@ export default function LevelEditor() {
                 >
                     Editing: {foregroundVisible ? "Foreground" : "Background"}
                 </div>
+                {
+                    mobs.map(m => {
+                        return(
+                            <div
+                            className="Mob" 
+                            style={{
+                                left: m.startingCoordinates.x,
+                                bottom: 480 - m.startingCoordinates.y,
+                            }}>
+                                <img
+                                    src={`${process.env.PUBLIC_URL}/img/${m.name}.gif`}
+                                    alt={m.name}
+                                />
+                            </div>
+                        );
+                    })
+                }
             </div>
         </div>
     );
