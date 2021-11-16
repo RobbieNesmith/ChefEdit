@@ -49,3 +49,9 @@
     left: -50%;
     top: 12px;
 }
+
+.MobPath {
+    position: absolute;
+    left: 0;
+    top: 0;
+}

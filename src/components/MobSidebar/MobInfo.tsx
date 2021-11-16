@@ -1,7 +1,7 @@
 import Mob from "../../models/mob";
 
-export default function MobInfo(props: {mob: Mob}) {
-    let {mob} = props;
+export default function MobInfo(props: { mob: Mob }) {
+    let { mob } = props;
     return (
         <li>
             <div>{mob.name}</div>
