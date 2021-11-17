@@ -22,6 +22,7 @@ export default function MobSprite(props: { mob: Mob }) {
             >
                 <img
                     src={`${process.env.PUBLIC_URL}/img/${mob.name}.gif`}
+                    style={mob.flippedH ? { transform: "scaleX(-1)" } : {}}
                     alt={mob.name}
                 />
             </div>
@@ -37,6 +38,7 @@ export default function MobSprite(props: { mob: Mob }) {
                     >
                         <img
                             src={`${process.env.PUBLIC_URL}/img/${mob.name}.gif`}
+                            style={mob.flippedH ? { transform: "scaleX(-1)" } : {}}
                             alt={mob.name}
                         />
                     </div>
