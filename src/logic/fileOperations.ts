@@ -1,4 +1,4 @@
-import Mob from "../models/mob";
+import Mob, { Coordinates } from "../models/mob";
 
 const bgoffset = 88;
 const fgoffset = 756;
@@ -30,90 +30,98 @@ export function getForegroundLayer(fileData: ArrayBuffer) {
   return foreground;
 }
 
-function parseMob(mobData: ArrayBuffer, id: number): Mob {
-  const rawData = new Uint8Array(mobData);
-  let ptr = 0;
-  let extraData = null;
-  let skip = 3;
-  if (id !== 0) {
-    skip = 4;
-  }
+function readUint8(mobData: ArrayBuffer, ptr: number) {
+  return new Uint8Array(mobData.slice(ptr, ptr + 1))[0];
+}
 
-  let extraDataLength = 0;
-  if (rawData[0] & 0x10) {
-    extraDataLength = 4;
-  }
-  if (rawData[0] & 0x01) {
-    extraDataLength += 4;
-  }
-  extraData = mobData.slice(skip, skip + extraDataLength);
-  ptr += skip + extraDataLength;
+function readInt32(mobData: ArrayBuffer, ptr: number) {
+  return new Int32Array(mobData.slice(ptr, ptr + 4))[0];
+}
 
-  const startCoords = new Float32Array(mobData.slice(ptr, ptr + 8));
-  const startingCoordinates = {
-    x: startCoords[0],
-    y: startCoords[1]
-  }
-  ptr += 8;
+function readFloat32(mobData: ArrayBuffer, ptr: number) {
+  return new Float32Array(mobData.slice(ptr, ptr + 4))[0];
+}
 
-  const flippedH = !!new Int32Array(mobData.slice(ptr, ptr + 4));
-  ptr += 4;
-
+function readCString(mobData: ArrayBuffer, ptr: number) {
+  const view = new Uint8Array(mobData);
   let nameEndPtr = ptr;
-  while(rawData[nameEndPtr]) {
+  while (nameEndPtr < mobData.byteLength && view[nameEndPtr] !== 0) {
     nameEndPtr++;
   }
-  const name = new TextDecoder().decode(new Uint8Array(mobData.slice(ptr, nameEndPtr)));
-  ptr = nameEndPtr + 1;
-
-  const numPathCoordinates = rawData[ptr];
-  ptr += 4;
-
-  let pathCoordinates = [];
-
-  for (let i = 0; i < numPathCoordinates; i++) {
-    const pathCoords = new Float32Array(mobData.slice(ptr, ptr + 8));
-    pathCoordinates.push({
-      x: pathCoords[0],
-      y: pathCoords[1]
-    });
-    ptr += 8;
-  }
-
-  return {
-    id,
-    rawData,
-    extraData,
-    startingCoordinates,
-    flippedH,
-    name,
-    pathCoordinates
-  }
+  return new TextDecoder().decode(new Uint8Array(mobData.slice(ptr, nameEndPtr)));
 }
 
-export function getMobs(fileData: ArrayBuffer): Array<Mob> {
-  const view = new Uint8Array(fileData.slice(numMobsOffset));
-  const numMobs = view[0];
-  let ptr = 1;
-  let mobDataStart = ptr;
-  let delimiterCount = 0;
-  let mobs = [];
-  while (mobs.length < numMobs) {
-    while (delimiterCount < 8 || view[ptr] === 0xFF) {
-      if (view[ptr] === 0xFF) {
-        delimiterCount++;
-      } else {
-        delimiterCount = 0;
-      }
-      ptr++;
+export function getMobs(fileData: ArrayBuffer) {
+  let mobs = [] as Array<Mob>;
+  const mobData = fileData.slice(numMobsOffset);
+  const numMobs = readUint8(mobData, 0);
+  let ptr = 4;
+  while (mobs.length < numMobs && ptr < mobData.byteLength) {
+    const startPtr = ptr;
+    const startX = readFloat32(mobData, ptr);
+    ptr += 4;
+    const startY = readFloat32(mobData, ptr);
+    ptr += 4;
+
+    const flippedH = readInt32(mobData, ptr);
+    ptr += 4;
+
+    const name = readCString(mobData, ptr);
+    ptr += name.length + 1;
+
+    const numPathCoordinates = readUint8(mobData, ptr);
+    ptr += 4;
+
+    let pathCoordinates = [] as Array<Coordinates>;
+
+    for (let i = 0; i < numPathCoordinates; i++) {
+      const pathX = readFloat32(mobData, ptr);
+      ptr += 4;
+      const pathY = readFloat32(mobData, ptr);
+      ptr += 4;
+      pathCoordinates.push({ x: pathX, y: pathY });
     }
-    mobs.push(fileData.slice(numMobsOffset + mobDataStart, numMobsOffset + ptr));
-    mobDataStart = ptr;
-    delimiterCount = 0;
-  }
-  return mobs.map(parseMob);
-}
 
+    // The next 4 bytes are always 0x00
+    ptr += 4;
+
+
+    // The next 4 bytes are always 0xFF
+    ptr += 4;
+
+    const spawnFromMob = readUint8(mobData, ptr);
+    ptr += 4;
+
+    const extraDataFlag = readUint8(mobData, ptr);
+    ptr += 4;
+
+    let unknown1 = null as number | null;
+    let unknown2 = null as number | null;
+
+    if (extraDataFlag & 0x01) {
+      unknown1 = readUint8(mobData, ptr);
+      ptr += 4;
+    }
+
+    if (extraDataFlag & 0x10) {
+      unknown2 = readFloat32(mobData, ptr);
+      ptr += 4
+    }
+
+    mobs.push({
+      id: mobs.length + 1,
+      rawData: new Uint8Array(mobData.slice(startPtr, ptr)),
+      unknown1: unknown1,
+      unknown2: unknown2,
+      startingCoordinates: { x: startX, y: startY },
+      flippedH: flippedH === -1,
+      name: name,
+      pathCoordinates: pathCoordinates,
+      spawnFromMob: spawnFromMob,
+    });
+  }
+  return mobs;
+}
 /*
 function loadFileToEditor() {
   levelData = tmpLevelData;
