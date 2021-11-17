@@ -5,19 +5,19 @@ import "./MobSidebar.css";
 
 export default function MobSidebar() {
     const [open, setOpen] = useState(false);
-    const {mobs} = useEditorState();
+    const { mobs } = useEditorState();
     return (
         <div
             className="MobSidebar"
-            style={{right: open ? 0 : "-15rem"}}
+            style={{ right: open ? 0 : "-15rem" }}
         >
             <ul>
-                {mobs.map(m => <MobInfo mob={m} />)}
+                {mobs.map(m => <MobInfo key={m.id} mob={m} />)}
             </ul>
             <div
                 className="CollapseMobSidebar"
                 onClick={() => setOpen(o => !o)}
-            >{ open ? ">" : "<" }</div>
+            >{open ? ">" : "<"}</div>
         </div>
     );
 }
