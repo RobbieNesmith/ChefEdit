@@ -1,5 +1,6 @@
 import useEditorState from "../../hooks/useEditorState";
 import "./LevelEditor.css";
+import MobSprite from "./MobSprite";
 import TileGrid from "./TileGrid";
 
 export default function LevelEditor() {
@@ -35,50 +36,7 @@ export default function LevelEditor() {
                     Editing: {foregroundVisible ? "Foreground" : "Background"}
                 </div>
                 {
-                    mobs.map(m => {
-                        const pathStartString = `M ${m.startingCoordinates.x} ${m.startingCoordinates.y}`;
-                        const pathContinuationString = m.pathCoordinates.map(p => `L ${p.x} ${p.y}`)
-                        const pathString = [pathStartString, ...pathContinuationString].join(" ");
-                        return (
-                            <>
-                                {
-                                    pathString.length > 1 &&
-                                    <svg width="640" height="480" className="MobPath">
-                                        <path fill="none" stroke="#FF00FF" strokeWidth="2" d={pathString} />
-                                    </svg>
-                                }
-                                <div
-                                    className="Mob"
-                                    style={{
-                                        left: m.startingCoordinates.x,
-                                        bottom: 480 - m.startingCoordinates.y,
-                                    }}
-                                >
-                                    <img
-                                        src={`${process.env.PUBLIC_URL}/img/${m.name}.gif`}
-                                        alt={m.name}
-                                    />
-                                </div>
-                                {m.pathCoordinates.map(pc => {
-                                    return (
-                                        <div
-                                            className="Mob"
-                                            style={{
-                                                opacity: 0.5,
-                                                left: pc.x,
-                                                bottom: 480 - pc.y,
-                                            }}
-                                        >
-                                            <img
-                                                src={`${process.env.PUBLIC_URL}/img/${m.name}.gif`}
-                                                alt={m.name}
-                                            />
-                                        </div>
-                                    );
-                                })}
-                            </>
-                        );
-                    })
+                    mobs.map(m => <MobSprite key={m.id} mob={m} />)
                 }
             </div>
         </div>
