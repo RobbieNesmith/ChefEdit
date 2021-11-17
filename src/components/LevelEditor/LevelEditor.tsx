@@ -44,7 +44,7 @@ export default function LevelEditor() {
                                 {
                                     pathString.length > 1 &&
                                     <svg width="640" height="480" className="MobPath">
-                                        <path stroke="#FF00FF" strokeWidth="2" d={pathString} />
+                                        <path fill="none" stroke="#FF00FF" strokeWidth="2" d={pathString} />
                                     </svg>
                                 }
                                 <div
