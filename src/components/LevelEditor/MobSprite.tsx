@@ -1,4 +1,4 @@
-import Mob from "../../models/mob";
+import Mob from "../../models/Mob";
 
 export default function MobSprite(props: { mob: Mob }) {
     const { mob } = props;

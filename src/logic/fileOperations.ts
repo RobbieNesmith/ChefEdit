@@ -1,4 +1,4 @@
-import Mob, { Coordinates } from "../models/mob";
+import Mob, { Coordinates } from "../models/Mob";
 
 const bgoffset = 88;
 const fgoffset = 756;
