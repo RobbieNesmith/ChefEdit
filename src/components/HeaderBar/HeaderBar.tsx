@@ -12,6 +12,7 @@ export default function HeaderBar() {
 
     async function loadFile(fileToLoad: File) {
         console.log(fileToLoad);
+        window.document.title = fileToLoad.name;
         const fileContents = await readFile(fileToLoad);
         setForegroundTiles(getForegroundLayer(fileContents));
         setBackgroundTiles(getBackgroundLayer(fileContents));
