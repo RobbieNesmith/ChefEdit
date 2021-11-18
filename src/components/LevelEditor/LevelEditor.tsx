@@ -12,7 +12,9 @@ export default function LevelEditor() {
         placeBackgroundTileAtIndex,
         placeForegroundTileAtIndex,
         pickTile,
-        mobs
+        mobs,
+        showMobs,
+        toggleMobs,
     } = useEditorState();
 
     return (
@@ -35,8 +37,17 @@ export default function LevelEditor() {
                 >
                     Editing: {foregroundVisible ? "Foreground" : "Background"}
                 </div>
+
+                <div
+                    className="MobTab"
+                    onClick={toggleMobs}
+                    style={{ backgroundColor: showMobs ? "#6888e8" : "#e09038" }}
+                >
+                    {showMobs ? "Hide Mobs" : "Show Mobs"}
+                </div>
+
                 {
-                    mobs.map(m => <MobSprite key={m.id} mob={m} />)
+                    showMobs && mobs.map(m => <MobSprite key={m.id} mob={m} />)
                 }
             </div>
         </div>

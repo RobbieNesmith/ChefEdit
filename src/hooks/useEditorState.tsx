@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState } from "react";
-import Mob from "../models/mob";
+import Mob from "../models/Mob";
 
 export interface EditorState {
     leftClickPressed: boolean;
@@ -11,6 +11,7 @@ export interface EditorState {
     backgroundTiles: Array<number>;
     levelData: ArrayBuffer;
     mobs: Array<Mob>;
+    showMobs: boolean;
     setLeftClickPressed(pressed: boolean): void;
     setRightClickPressed(pressed: boolean): void;
     toggleForegroundVisible(): void;
@@ -23,6 +24,7 @@ export interface EditorState {
     placeForegroundTileAtIndex(tileId: number, index: number): void,
     placeBackgroundTileAtIndex(tileId: number, index: number): void,
     pickTile(tileId: number): void,
+    toggleMobs(): void,
 }
 
 function getEmptyEditorState(): EditorState {
@@ -36,6 +38,7 @@ function getEmptyEditorState(): EditorState {
         backgroundTiles: getBlankTileGrid(),
         levelData: new ArrayBuffer(0),
         mobs: new Array<Mob>(),
+        showMobs: true,
         setLeftClickPressed: (b: boolean) => { throw new Error("Editor State Context not found") },
         setRightClickPressed: (b: boolean) => { throw new Error("Editor State Context not found") },
         toggleForegroundVisible: () => { throw new Error("Editor State Context not found") },
@@ -48,6 +51,7 @@ function getEmptyEditorState(): EditorState {
         placeForegroundTileAtIndex: (tileId: number, index: number) => { throw new Error("Editor State Context not found") },
         placeBackgroundTileAtIndex: (tileId: number, index: number) => { throw new Error("Editor State Context not found") },
         pickTile: (tileId: number) => { throw new Error("Editor State Context not found") },
+        toggleMobs: () => { throw new Error("Editor State Context not found") },
     }
 }
 
@@ -61,7 +65,7 @@ export default function useEditorState() {
     return useContext(EditorStateContext);
 }
 
-export function EditorStateProvider(props: {children: any}) {
+export function EditorStateProvider(props: { children: any }) {
     const [leftClickPressed, setLeftClickPressed] = useState(false);
     const [rightClickPressed, setRightClickPressed] = useState(false);
     const [foregroundVisible, setForegroundVisible] = useState(true);
@@ -71,6 +75,7 @@ export function EditorStateProvider(props: {children: any}) {
     const [foregroundTiles, setForegroundTiles] = useState(getBlankTileGrid());
     const [levelData, setLevelData] = useState(new ArrayBuffer(0));
     const [mobs, setMobs] = useState([] as Array<Mob>);
+    const [showMobs, setShowMobs] = useState(true);
 
     function placeBackgroundTileAtIndex(index: number, tileId: number) {
         setBackgroundTiles((bt) => {
@@ -98,6 +103,7 @@ export function EditorStateProvider(props: {children: any}) {
         backgroundTiles,
         levelData,
         mobs,
+        showMobs,
         setLeftClickPressed,
         setRightClickPressed,
         toggleForegroundVisible: () => setForegroundVisible(fv => !fv),
@@ -110,11 +116,12 @@ export function EditorStateProvider(props: {children: any}) {
         placeForegroundTileAtIndex,
         placeBackgroundTileAtIndex,
         pickTile,
-    }), [leftClickPressed, rightClickPressed, foregroundVisible, leftClickTileId, rightClickTileId, foregroundTiles, backgroundTiles, levelData, mobs]);
+        toggleMobs: () => setShowMobs(sm => !sm),
+    }), [leftClickPressed, rightClickPressed, foregroundVisible, leftClickTileId, rightClickTileId, foregroundTiles, backgroundTiles, levelData, mobs, showMobs]);
 
     return (
         <EditorStateContext.Provider value={value}>
-            { props.children }
+            {props.children}
         </EditorStateContext.Provider>
     );
 }

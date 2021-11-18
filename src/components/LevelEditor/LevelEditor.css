@@ -39,6 +39,15 @@
     padding: 0 2rem 0 1rem;
 }
 
+.MobTab {
+    position: absolute;
+    height: 2rem;
+    top: -2rem;
+    right: 0;
+    user-select: none;
+    padding: 0 2rem 0 1rem;
+}
+
 .Mob {
     position: absolute;
     z-index: 10;

@@ -7,7 +7,7 @@ import FileLoadModal from "./FileLoadModal";
 import { getBackgroundLayer, getForegroundLayer, getMobs, readFile } from "../../logic/fileOperations";
 
 export default function HeaderBar() {
-    const { toggleForegroundVisible, setLevelData, setForegroundTiles, setBackgroundTiles, setMobs } = useEditorState();
+    const { toggleForegroundVisible, setLevelData, setForegroundTiles, setBackgroundTiles, setMobs, toggleMobs } = useEditorState();
     const [fileLoadModalShown, setFileLoadModalShown] = useState(false);
 
     async function loadFile(fileToLoad: File) {
@@ -32,10 +32,11 @@ export default function HeaderBar() {
             <MenuOption name="Cut" callback={() => console.log("cut")} />
             <MenuOption name="Copy" callback={() => console.log("copy")} />
             <MenuOption name="Paste" callback={() => console.log("paste")} />
-            </MenuCategory>
+        </MenuCategory>
         <MenuCategory name="view">
             <MenuOption name="Switch Layer" callback={toggleForegroundVisible} />
+            <MenuOption name="Show/Hide Mobs" callback={toggleMobs} />
         </MenuCategory>
-        <FileLoadModal shown={fileLoadModalShown} onConfirm={loadFile} onDismiss={() => setFileLoadModalShown(false)}/>
+        <FileLoadModal shown={fileLoadModalShown} onConfirm={loadFile} onDismiss={() => setFileLoadModalShown(false)} />
     </div>;
 }
