@@ -1,8 +1,12 @@
+import ChefHeaders from "../models/ChefHeaders";
 import Mob, { Coordinates } from "../models/Mob";
 
 const bgoffset = 88;
 const fgoffset = 756;
 const numMobsOffset = 1360;
+
+const fileHeaderLength = 0x14;
+const layerHeaderLength = 0x44;
 
 export async function readFile(inputFile: File): Promise<ArrayBuffer> {
   return new Promise((resolve) => {
@@ -10,6 +14,14 @@ export async function readFile(inputFile: File): Promise<ArrayBuffer> {
     reader.onloadend = () => resolve(reader.result as ArrayBuffer)
     reader.readAsArrayBuffer(inputFile);
   });
+}
+
+export function getHeaders(fileData: ArrayBuffer): ChefHeaders {
+  return {
+    fileHeader: new Uint8Array(fileData.slice(0, fileHeaderLength)),
+    backgroundHeader: new Uint8Array(fileData.slice(bgoffset - layerHeaderLength, bgoffset)),
+    foregroundHeader: new Uint8Array(fileData.slice(fgoffset - layerHeaderLength, fgoffset))
+  };
 }
 
 export function getBackgroundLayer(fileData: ArrayBuffer) {

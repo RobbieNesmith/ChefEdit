@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState } from "react";
+import ChefHeaders from "../models/ChefHeaders";
 import Mob from "../models/Mob";
 
 export interface EditorState {
@@ -12,6 +13,7 @@ export interface EditorState {
     levelData: ArrayBuffer;
     mobs: Array<Mob>;
     showMobs: boolean;
+    headers: ChefHeaders | null;
     setLeftClickPressed(pressed: boolean): void;
     setRightClickPressed(pressed: boolean): void;
     toggleForegroundVisible(): void;
@@ -25,6 +27,7 @@ export interface EditorState {
     placeBackgroundTileAtIndex(tileId: number, index: number): void,
     pickTile(tileId: number): void,
     toggleMobs(): void,
+    setHeaders(headers: ChefHeaders): void,
 }
 
 function getBlankTileGrid(): Uint16Array {
@@ -50,6 +53,7 @@ export function EditorStateProvider(props: { children: any }) {
     const [levelData, setLevelData] = useState(new ArrayBuffer(0));
     const [mobs, setMobs] = useState([] as Array<Mob>);
     const [showMobs, setShowMobs] = useState(true);
+    const [headers, setHeaders] = useState(null as ChefHeaders | null)
 
     function placeBackgroundTileAtIndex(index: number, tileId: number) {
         setBackgroundTiles((bt) => {
@@ -78,6 +82,7 @@ export function EditorStateProvider(props: { children: any }) {
         levelData,
         mobs,
         showMobs,
+        headers,
         setLeftClickPressed,
         setRightClickPressed,
         toggleForegroundVisible: () => setForegroundVisible(fv => !fv),
@@ -91,7 +96,8 @@ export function EditorStateProvider(props: { children: any }) {
         placeBackgroundTileAtIndex,
         pickTile,
         toggleMobs: () => setShowMobs(sm => !sm),
-    }), [leftClickPressed, rightClickPressed, foregroundVisible, leftClickTileId, rightClickTileId, foregroundTiles, backgroundTiles, levelData, mobs, showMobs]);
+        setHeaders,
+    }), [leftClickPressed, rightClickPressed, foregroundVisible, leftClickTileId, rightClickTileId, foregroundTiles, backgroundTiles, levelData, mobs, showMobs, headers]);
 
     return (
         <EditorStateContext.Provider value={value}>

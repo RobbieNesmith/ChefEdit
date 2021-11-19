@@ -4,16 +4,17 @@ import MenuOption from "./MenuOption";
 import useEditorState from "../../hooks/useEditorState";
 import { useState } from "react";
 import FileLoadModal from "./FileLoadModal";
-import { getBackgroundLayer, getForegroundLayer, getMobs, readFile } from "../../logic/fileOperations";
+import { getBackgroundLayer, getForegroundLayer, getHeaders, getMobs, readFile } from "../../logic/fileOperations";
 
 export default function HeaderBar() {
-    const { toggleForegroundVisible, setLevelData, setForegroundTiles, setBackgroundTiles, setMobs, toggleMobs } = useEditorState();
+    const { toggleForegroundVisible, setLevelData, setForegroundTiles, setBackgroundTiles, setMobs, toggleMobs, setHeaders } = useEditorState();
     const [fileLoadModalShown, setFileLoadModalShown] = useState(false);
 
     async function loadFile(fileToLoad: File) {
         console.log(fileToLoad);
         window.document.title = fileToLoad.name;
         const fileContents = await readFile(fileToLoad);
+        setHeaders(getHeaders(fileContents));
         setForegroundTiles(getForegroundLayer(fileContents));
         setBackgroundTiles(getBackgroundLayer(fileContents));
         const mobs = getMobs(fileContents);
