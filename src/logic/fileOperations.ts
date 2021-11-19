@@ -13,21 +13,11 @@ export async function readFile(inputFile: File): Promise<ArrayBuffer> {
 }
 
 export function getBackgroundLayer(fileData: ArrayBuffer) {
-  const view = new Uint16Array(fileData.slice(bgoffset, bgoffset + 20 * 15 * 2));
-  let background = [];
-  for (var i = 0; i < 20 * 15; i++) {
-    background.push(view[i]);
-  }
-  return background;
+  return new Uint16Array(fileData.slice(bgoffset, bgoffset + 20 * 15 * 2));
 }
 
 export function getForegroundLayer(fileData: ArrayBuffer) {
-  const view = new Uint16Array(fileData.slice(fgoffset, fgoffset + 20 * 15 * 2));
-  let foreground = [];
-  for (var i = 0; i < 20 * 15; i++) {
-    foreground.push(view[i]);
-  }
-  return foreground;
+  return new Uint16Array(fileData.slice(fgoffset, fgoffset + 20 * 15 * 2));
 }
 
 function readUint8(mobData: ArrayBuffer, ptr: number) {

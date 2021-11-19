@@ -9,11 +9,11 @@ function getOffsetForTileId(index: number) {
 }
 
 export default function TileGrid(props: {
-    tiles: Array<number>,
-    onTilePlaced(index: number, button: number):void,
+    tiles: Uint16Array,
+    onTilePlaced(index: number, button: number): void,
     onTilePicked(tileId: number): void
 }) {
-    const {leftClickPressed, rightClickPressed, leftClickTileId, rightClickTileId, setLeftClickPressed, setRightClickPressed} = useEditorState();
+    const { leftClickPressed, rightClickPressed, leftClickTileId, rightClickTileId, setLeftClickPressed, setRightClickPressed } = useEditorState();
 
     function handleMouseDown(index: number, evt: React.MouseEvent) {
         evt.stopPropagation();
@@ -47,12 +47,12 @@ export default function TileGrid(props: {
         <div
             className="TileGrid"
         >
-            {props.tiles.map((tileId, index) => {
+            {Array.from(props.tiles).map((tileId, index) => {
                 const offset = getOffsetForTileId(tileId);
                 return (
                     <div
                         key={index}
-                        className="Tile" 
+                        className="Tile"
                         style={{
                             backgroundPositionX: offset.xOffset,
                             backgroundPositionY: offset.yOffset

@@ -7,8 +7,8 @@ export interface EditorState {
     foregroundVisible: boolean;
     leftClickTileId: number;
     rightClickTileId: number;
-    foregroundTiles: Array<number>;
-    backgroundTiles: Array<number>;
+    foregroundTiles: Uint16Array;
+    backgroundTiles: Uint16Array;
     levelData: ArrayBuffer;
     mobs: Array<Mob>;
     showMobs: boolean;
@@ -18,8 +18,8 @@ export interface EditorState {
     setLeftClickTileId(tileId: number): void;
     setRightClickTileId(tileId: number): void;
     setLevelData(data: ArrayBuffer): void;
-    setForegroundTiles(tiles: Array<number>): void;
-    setBackgroundTiles(tiles: Array<number>): void;
+    setForegroundTiles(tiles: Uint16Array): void;
+    setBackgroundTiles(tiles: Uint16Array): void;
     setMobs(mobs: Array<Mob>): void;
     placeForegroundTileAtIndex(tileId: number, index: number): void,
     placeBackgroundTileAtIndex(tileId: number, index: number): void,
@@ -45,8 +45,8 @@ function getEmptyEditorState(): EditorState {
         setLeftClickTileId: (tileId: number) => { throw new Error("Editor State Context not found") },
         setRightClickTileId: (tileId: number) => { throw new Error("Editor State Context not found") },
         setLevelData: (data: ArrayBuffer) => { throw new Error("Editor State Context not found") },
-        setForegroundTiles: (tiles: Array<number>) => { throw new Error("Editor State Context not found") },
-        setBackgroundTiles: (tiles: Array<number>) => { throw new Error("Editor State Context not found") },
+        setForegroundTiles: (tiles: Uint16Array) => { throw new Error("Editor State Context not found") },
+        setBackgroundTiles: (tiles: Uint16Array) => { throw new Error("Editor State Context not found") },
         setMobs: (mobs: Array<Mob>) => { throw new Error("Editor State Context not found") },
         placeForegroundTileAtIndex: (tileId: number, index: number) => { throw new Error("Editor State Context not found") },
         placeBackgroundTileAtIndex: (tileId: number, index: number) => { throw new Error("Editor State Context not found") },
@@ -55,8 +55,8 @@ function getEmptyEditorState(): EditorState {
     }
 }
 
-function getBlankTileGrid(): Array<number> {
-    return Array(20 * 15).fill(0);
+function getBlankTileGrid(): Uint16Array {
+    return new Uint16Array(20 * 15);
 }
 
 export const EditorStateContext = createContext(getEmptyEditorState());
@@ -79,13 +79,13 @@ export function EditorStateProvider(props: { children: any }) {
 
     function placeBackgroundTileAtIndex(index: number, tileId: number) {
         setBackgroundTiles((bt) => {
-            return [...bt.slice(0, index), tileId, ...bt.slice(index + 1)];
+            return bt.map((tid, idx) => index === idx ? tileId : tid);
         });
     }
 
     function placeForegroundTileAtIndex(index: number, tileId: number) {
         setForegroundTiles((ft) => {
-            return [...ft.slice(0, index), tileId, ...ft.slice(index + 1)];
+            return ft.map((tid, idx) => index === idx ? tileId : tid);
         });
     }
 
@@ -110,8 +110,8 @@ export function EditorStateProvider(props: { children: any }) {
         setLeftClickTileId: (id: number) => setLeftClickTileId(id),
         setRightClickTileId: (id: number) => setRightClickTileId(id),
         setLevelData: (data: ArrayBuffer) => setLevelData(data),
-        setForegroundTiles: (tiles: Array<number>) => setForegroundTiles(tiles),
-        setBackgroundTiles: (tiles: Array<number>) => setBackgroundTiles(tiles),
+        setForegroundTiles: (tiles: Uint16Array) => setForegroundTiles(tiles),
+        setBackgroundTiles: (tiles: Uint16Array) => setBackgroundTiles(tiles),
         setMobs: (mobs: Array<Mob>) => setMobs(mobs),
         placeForegroundTileAtIndex,
         placeBackgroundTileAtIndex,
