@@ -27,42 +27,16 @@ export interface EditorState {
     toggleMobs(): void,
 }
 
-function getEmptyEditorState(): EditorState {
-    return {
-        leftClickPressed: false,
-        rightClickPressed: false,
-        foregroundVisible: true,
-        leftClickTileId: 0,
-        rightClickTileId: 0,
-        foregroundTiles: getBlankTileGrid(),
-        backgroundTiles: getBlankTileGrid(),
-        levelData: new ArrayBuffer(0),
-        mobs: new Array<Mob>(),
-        showMobs: true,
-        setLeftClickPressed: (b: boolean) => { throw new Error("Editor State Context not found") },
-        setRightClickPressed: (b: boolean) => { throw new Error("Editor State Context not found") },
-        toggleForegroundVisible: () => { throw new Error("Editor State Context not found") },
-        setLeftClickTileId: (tileId: number) => { throw new Error("Editor State Context not found") },
-        setRightClickTileId: (tileId: number) => { throw new Error("Editor State Context not found") },
-        setLevelData: (data: ArrayBuffer) => { throw new Error("Editor State Context not found") },
-        setForegroundTiles: (tiles: Uint16Array) => { throw new Error("Editor State Context not found") },
-        setBackgroundTiles: (tiles: Uint16Array) => { throw new Error("Editor State Context not found") },
-        setMobs: (mobs: Array<Mob>) => { throw new Error("Editor State Context not found") },
-        placeForegroundTileAtIndex: (tileId: number, index: number) => { throw new Error("Editor State Context not found") },
-        placeBackgroundTileAtIndex: (tileId: number, index: number) => { throw new Error("Editor State Context not found") },
-        pickTile: (tileId: number) => { throw new Error("Editor State Context not found") },
-        toggleMobs: () => { throw new Error("Editor State Context not found") },
-    }
-}
-
 function getBlankTileGrid(): Uint16Array {
     return new Uint16Array(20 * 15);
 }
 
-export const EditorStateContext = createContext(getEmptyEditorState());
+export const EditorStateContext = createContext(null as EditorState | null);
 
 export default function useEditorState() {
-    return useContext(EditorStateContext);
+    const editorStateContext = useContext(EditorStateContext);
+    if (!editorStateContext) throw new Error("Editor State Provider not found!");
+    return editorStateContext;
 }
 
 export function EditorStateProvider(props: { children: any }) {
