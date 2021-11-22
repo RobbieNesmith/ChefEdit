@@ -14,6 +14,7 @@ export interface EditorState {
     mobs: Array<Mob>;
     showMobs: boolean;
     headers: ChefHeaders | null;
+    fileName: string;
     setLeftClickPressed(pressed: boolean): void;
     setRightClickPressed(pressed: boolean): void;
     toggleForegroundVisible(): void;
@@ -23,11 +24,12 @@ export interface EditorState {
     setForegroundTiles(tiles: Uint16Array): void;
     setBackgroundTiles(tiles: Uint16Array): void;
     setMobs(mobs: Array<Mob>): void;
-    placeForegroundTileAtIndex(tileId: number, index: number): void,
-    placeBackgroundTileAtIndex(tileId: number, index: number): void,
-    pickTile(tileId: number): void,
-    toggleMobs(): void,
-    setHeaders(headers: ChefHeaders): void,
+    placeForegroundTileAtIndex(tileId: number, index: number): void;
+    placeBackgroundTileAtIndex(tileId: number, index: number): void;
+    pickTile(tileId: number): void;
+    toggleMobs(): void;
+    setHeaders(headers: ChefHeaders): void;
+    setFileName(fileName: string): void;
 }
 
 function getBlankTileGrid(): Uint16Array {
@@ -53,7 +55,8 @@ export function EditorStateProvider(props: { children: any }) {
     const [levelData, setLevelData] = useState(new ArrayBuffer(0));
     const [mobs, setMobs] = useState([] as Array<Mob>);
     const [showMobs, setShowMobs] = useState(true);
-    const [headers, setHeaders] = useState(null as ChefHeaders | null)
+    const [headers, setHeaders] = useState(null as ChefHeaders | null);
+    const [fileName, setFileName] = useState("");
 
     function placeBackgroundTileAtIndex(index: number, tileId: number) {
         setBackgroundTiles((bt) => {
@@ -83,6 +86,7 @@ export function EditorStateProvider(props: { children: any }) {
         mobs,
         showMobs,
         headers,
+        fileName,
         setLeftClickPressed,
         setRightClickPressed,
         toggleForegroundVisible: () => setForegroundVisible(fv => !fv),
@@ -97,7 +101,8 @@ export function EditorStateProvider(props: { children: any }) {
         pickTile,
         toggleMobs: () => setShowMobs(sm => !sm),
         setHeaders,
-    }), [leftClickPressed, rightClickPressed, foregroundVisible, leftClickTileId, rightClickTileId, foregroundTiles, backgroundTiles, levelData, mobs, showMobs, headers]);
+        setFileName,
+    }), [leftClickPressed, rightClickPressed, foregroundVisible, leftClickTileId, rightClickTileId, foregroundTiles, backgroundTiles, levelData, mobs, showMobs, headers, fileName]);
 
     return (
         <EditorStateContext.Provider value={value}>

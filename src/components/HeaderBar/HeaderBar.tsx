@@ -2,17 +2,18 @@ import MenuCategory from "./MenuCategory";
 import "./HeaderBar.css";
 import MenuOption from "./MenuOption";
 import useEditorState from "../../hooks/useEditorState";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import FileLoadModal from "./FileLoadModal";
-import { getBackgroundLayer, getForegroundLayer, getHeaders, getMobs, readFile } from "../../logic/fileOperations";
+import { getBackgroundLayer, getForegroundLayer, getHeaders, saveLevel, getMobs, levelToBinary, readFile } from "../../logic/fileOperations";
 
 export default function HeaderBar() {
-    const { toggleForegroundVisible, setLevelData, setForegroundTiles, setBackgroundTiles, setMobs, toggleMobs, setHeaders } = useEditorState();
+    const { toggleForegroundVisible, setLevelData, setForegroundTiles, setBackgroundTiles, setMobs, toggleMobs, setHeaders, setFileName, headers, foregroundTiles, backgroundTiles, mobs, fileName } = useEditorState();
     const [fileLoadModalShown, setFileLoadModalShown] = useState(false);
 
     async function loadFile(fileToLoad: File) {
         console.log(fileToLoad);
         window.document.title = fileToLoad.name;
+        setFileName(fileToLoad.name);
         const fileContents = await readFile(fileToLoad);
         setHeaders(getHeaders(fileContents));
         setForegroundTiles(getForegroundLayer(fileContents));
@@ -24,11 +25,17 @@ export default function HeaderBar() {
         setFileLoadModalShown(false);
     }
 
+    const doSave = useCallback(() => {
+        if (headers) {
+            saveLevel(levelToBinary(headers, backgroundTiles, foregroundTiles, mobs), fileName);
+        }
+    }, [headers, backgroundTiles, foregroundTiles, mobs, fileName]);
+
     return <div className="HeaderBar">
         <MenuCategory name="file">
             <MenuOption name="New" callback={() => console.log("new file")} />
             <MenuOption name="Open" callback={() => setFileLoadModalShown(true)} />
-            <MenuOption name="Save" callback={() => console.log("save file")} />
+            <MenuOption name="Save" callback={doSave} />
         </MenuCategory>
         <MenuCategory name="edit">
             <MenuOption name="Cut" callback={() => console.log("cut")} />
